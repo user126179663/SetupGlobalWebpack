@@ -10,11 +10,6 @@
 												"dst": "<[project]>",
 												"renameRx": [ [ "(.*?)\\.preset$", "i" ], "$1" ]
 											},
-		"gw.placeholder.json":		{
-												"path": "<[presets]>gw.placeholder.json.preset",
-												"dst": "<[project]>",
-												"renameRx": [ [ "(.*?)\\.preset$", "i" ], "$1" ]
-											},
 		"index.html":					{
 												"path": "<[presets]>index.html.template",
 												"dst": "<[project]>",
@@ -41,7 +36,7 @@
 			"title": "Hi, world."
 		},
 		"index.js": {
-			"sample": "Promise.resolve('hi').then(alert);"
+			"sample": "(async emoji => { for await (const v of { async *[Symbol.asyncIterator]() { yield Promise.resolve(((...args) => args.at(1) + args[0].at(1))`${'Hi'}, world.`).then(message => /\\p{Basic_Emoji}/v.test(emoji) && message.replaceAll(/(hi)/gi, `${emoji} $1`)); } }) alert(v); })('👋');"
 		}
 	},
 	"setting": {

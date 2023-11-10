@@ -17,7 +17,7 @@ set NODE_DOWNLOAD_PAGE_URL=https://nodejs.org/en/download
 set SETUP_BAT_INPUT_PATH=gw.setup.bat.preset
 set SETUP_BAT_OUTPUT_PATH=gw.setup.bat
 
-set DEFAULT_INSTALL_MODULES=webpack webpack-cli babel-loader @babel/core @babel/preset-env core-js
+set DEFAULT_INSTALL_MODULES=iconv-lite webpack webpack-cli babel-loader @babel/core @babel/preset-env core-js
 
 :begin_process
 
@@ -55,19 +55,31 @@ if errorlevel 1 (
 	
 )
 
-set option=
-
-echo;
-echo [インストールオプションを入力: ヘルプを表示=--h]
-set /p option=^>
-echo;
-
-if "%option%" == "--h" (
+if "%~1" == "" (
 	
-	echo 以下は規定でインストールされるモジュールです。
+	set option=
+	
+	echo;
+	echo [インストールオプションを入力: ヘルプを表示=h]
+	set /p option=^>
 	echo;
 	
-	call :view_install_modules "%DEFAULT_INSTALL_MODULES%"
+) else (
+	
+	set option=%~1
+	
+	goto fetch_args
+	
+)
+
+:fetched_args
+
+if "%option%" == "h" (
+	
+	echo 以下は既定でインストールされるモジュールです。
+	echo;
+	
+	call :view_module_list "%DEFAULT_INSTALL_MODULES%"
 	echo;
 	
 	echo インストール先は以下です。
@@ -78,49 +90,79 @@ if "%option%" == "--h" (
 	echo 以下のインストールオプションを入力できます。
 	echo 未入力の場合、上記のモジュールだけをインストールします。
 	echo;
-	echo   インストールするモジュールを追加
 	echo     --i module0 module1 module2...
+	echo   既定でインストールするモジュールに加え、列挙したモジュールをインストールする
 	echo;
-	echo   特定のモジュールのインストールのスキップ
-	echo     --x module0 module1 module2...
-	echo;
-	echo   既定のモジュールのインストールをすべてスキップ
 	echo     --x
+	echo   既定のモジュールのインストールをすべてスキップ
+	echo;
+	echo     --x module0 module1 module2...
+	echo   列挙したモジュールのインストールのスキップ
+	echo;
+	echo     --xx
+	echo   既定のモジュールのインストールをすべてスキップ。
+	echo   --x と同時指定が可能です。
+	echo;
+	echo     --xx module0 module1 module2...
+	echo   列挙したモジュールと既定のモジュールのインストールをすべてスキップ。
+	echo   --x と同時指定が可能です。
+	echo;
+	echo     --u
+	echo   --i に指定されたモジュールをアンインストールします。
+	echo   --u だけを指定した場合、
+	echo   既定でインストールされたモジュールをアンインストールします。
+	echo   --x を指定していると、列挙したモジュールのアンインストールをスキップします。
 	
 	goto :begin_process
 	
 )
 
-set installModules=^
-const	im = '%option%'.match(/(?:^^^|.*?\s+)--i(?:\s+(.*?)(?:\s*?^|\s+--.*?)$^|$)/)?.[1]?.trim?.()?.split?.(' ') ?? [],^
-		xMatched = '%option%'.match(/(?:^^^|.*?\s+)--x(?:\s+(.*?)(?:\s*?^|\s+--.*?)$^|$)/),^
-		xm = xMatched ^&^& (xMatched[1] ? xMatched[1].trim().split(' ') : []),^
-		im0 = [ ...new Set([ ...(xm ^&^& xm.length === 0 ? [] : '%DEFAULT_INSTALL_MODULES%'.split(' ')), ...im ]) ];^
-console.log((xm ? im0.filter(v =^> xm.indexOf(v) === -1) : im0).join('\n'));
+set parseOption=^
+const	option = '%option%',^
+		u = option.match(/(?:^^^|.*?\s+)--u(?:\s+.*?$^|$)/),^
+		im = option.match(/(?:^^^|.*?\s+)--i(?:\s+(.*?)(?:\s*?^|\s+--.*?)$^|$)/)?.[1]?.trim?.()?.split?.(' ') ?? [],^
+		xxm_ = option.match(/(?:^^^|.*?\s+)--xx(?:\s+.*?$^|$)/),^
+		xxMatched = option.match(/(?:^^^|.*?\s+)--xx(?:\s+(.*?)(?:\s*?^|\s+--.*?)$^|$)/),^
+		xxm = xxMatched ^&^& (xxMatched[1] ? xxMatched[1].trim().split(' ') : []),^
+		xMatched = option.match(/(?:^^^|.*?\s+)--x(?:\s+(.*?)(?:\s*?^|\s+--.*?)$^|$)/),^
+		xm = xMatched ^&^& (xMatched[1] ? xMatched[1].trim().split(' ') : []).concat(xxm ?? []),^
+		im0 = [ ...new Set([ ...(((xm ^&^& xm.length === 0) ^|^| xxMatched) ? [] : '%DEFAULT_INSTALL_MODULES%'.split(' ')), ...im ]) ];^
+console.log((u ? '_u_' : '___') + ' ' + (xm ? im0.filter(v =^> xm.indexOf(v) === -1) : im0).join('\n'));
+
 set modules=
-for /f "usebackq" %%i in (`call %NODE% -e "%installModules%"`) do set modules=!modules! %%i
+for /f "usebackq delims=" %%i in (`call %NODE% -e "%parseOption%"`) do set modules=!modules! %%i
+rem for /f "usebackq" %%i in (`call %NODE% -e "%installModules%"`) do set modules=!modules! %%i
+
+if "%modules:~1,3%" == "_u_" (
+	set process=uninstall
+	set processName=アンインストール
+) else (
+	set process=i
+	set processName=インストール
+)
+
+set modules=%modules:~5%
 
 if defined modules (
 	
-	echo 以下のモジュールがインストールされます。
+	echo 以下のモジュールが!processName!されます。
 	echo;
 	
-	call :view_install_modules "%modules%"
+	call :view_module_list "%modules%"
 	
 	echo;
 	echo よろしければ y を入力してください。
-	echo 未入力か、それ以外を入力すると、インストールを中止して終了します。
+	echo 未入力か、それ以外を入力すると、!processName!を中止して終了します。
 	echo;
-	echo [上記のモジュールをインストールする=y]
+	echo [上記のモジュールを!processName!する=y]
 	set /p confirm=^>
 	echo;
 	
 	if /i not "!confirm!" == "y" endlocal&exit
 	
-	call %NPM% i -g%modules%
+	call %NPM% !process! -g%modules%
 	
 )
-echo;
 
 :create_setup_file
 
@@ -137,15 +179,23 @@ if exist "!SETUP_BAT_OUTPUT_PATH!" (
 	
 )
 
-call %NODE% --input-type=module -e ^
-"import { readFile, writeFile } from 'fs';^
-import { dirname } from 'path';^
-const { argv: { 1: installed, 2: node, 3: npm } } = process;^
-readFile(^
-	'%SETUP_BAT_INPUT_PATH%',^
-	'utf8',^
-	(error, file) =^> error ^|^| writeFile('%SETUP_BAT_OUTPUT_PATH%', file.replace(/^<\[path\]\[installed\]^>/gi, dirname(installed) + '\\').replace(/^<\[path\]\[node\]^>/gi, node).replace(/^<\[path\]\[npm\]^>/gi, npm), ()=^>{})^
-);" %0 %NODE% %NPM%
+call %NODE% -e "^
+const	fs = require('fs'),^
+			path = require('path'),^
+			iconv = require('%appdata:\=/%/npm/node_modules/iconv-lite'),^
+			{ argv: { 1: installed, 2: node, 3: npm } } = process,^
+			ws = fs.createWriteStream('%SETUP_BAT_OUTPUT_PATH%');^
+ws.write(^
+	iconv.encode(^
+		iconv.decode(fs.readFileSync('%SETUP_BAT_INPUT_PATH%'), 'Shift-JIS').^
+			replace(/^<\[path\]\[installed\]^>/gi, path.dirname(installed) + '\\').^
+			replace(/^<\[path\]\[node\]^>/gi, node).^
+			replace(/^<\[path\]\[npm\]^>/gi, npm),^
+		'Shift_JIS'^
+	)^
+),^
+ws.end();^
+" %0 %NODE% %NPM%
 
 echo セットアップ用のファイル "!SETUP_BAT_OUTPUT_PATH!" を作成しました。
 echo プロジェクトを新規作成する際は、その都度
@@ -160,7 +210,7 @@ endlocal
 pause>nul
 exit
 
-:view_install_modules
+:view_module_list
 
 set values=console.log('%~1'.replace(/\s/g, '\n'));
 
@@ -182,3 +232,17 @@ set /p runAgain=^>
 if /i "!runAgain!" == "y" set requiresNode=1
 
 exit /b
+
+:fetch_args
+
+shift /1
+
+if not "%~1" == "" (
+	
+	set option=!option! %1
+	
+	goto fetch_args
+	
+)
+
+goto fetched_args
