@@ -195,13 +195,13 @@ global['gw.placeholder.json'].c;   // 4
 
 　📄 *gw.placeholder.json* 内では任意のプロパティを設定することができますが、以下のような固有のプロパティも存在します。
 
-#### 📦 preset @[*gw.placeholder.json*]
+[*\[gw.placeholder.json\]*]: #-gwplaceholderjson
+[📦 ***\[descriptor\]***]: #hhjgjh
+[*\[descriptor\]*]: #a
+#### 📦 preset @[*\[gw.placeholder.json\]*]
 　環境構築時に生成するファイルの情報を示す記述子（descriptor）をプロパティにした [🌐 Object](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object) です。キーは記述子の名前を示し、一意である必要がありますが、任意の名前にすることができます。
 
-[*[gw.placeholder.json]*]: #-gwplaceholderjson
-[📦 ***\[descriptor\]***]: #
-[*\[descriptor\]*]: #a
-#### [📦 ***\[descriptor\]***] @[*[gw.placeholder.json]*].[*preset*]
+#### 📦 \[descriptor\] @[*\[gw.placeholder.json\]*].[*preset*]
 　
 
 #### 🧩 path @[*\[gw.placeholder.json\]*].[*preset*][*\[descriptor\]*]
