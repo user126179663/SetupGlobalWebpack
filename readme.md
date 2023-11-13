@@ -16,12 +16,12 @@
 [*インストールフォルダー*]: #-インストールフォルダー
 [📁 ***gw***]: #-gw
 [*gw*]: #-gw
-[📁 ***presets***]: #-presets
-[*presets*]: #-presets
-[📁 ***setup***]: #-setup
-[*setup*]: #-setup
-[📁 ***config***]: #-config
-[*config*]: #-config
+[📁 ***presets***]: #-presets-インストールフォルダー
+[*presets*]: #-presets-インストールフォルダー
+[📁 ***setup***]: #-setup-インストールフォルダー
+[*setup*]: #-setup-インストールフォルダー
+[📁 ***config***]: #-config-インストールフォルダーsetup
+[*config*]: #-config-インストールフォルダーsetup
 [📁 ***setting***]: #-setting
 [*setting*]: #-setting
 [📁 ***setup\****]: #-setup
@@ -63,7 +63,7 @@
 
 ## 📁 インストールフォルダー
 
-## 📁 presets @[*インストールフォルダー*]
+## 📁 presets <font size="3">@[*インストールフォルダー*]</font>
 　[📄 ***gw.setup.bat***]@[*プロジェクトフォルダー*]実行後に生成されるファイルの元になるファイルが入ったフォルダーです。
 
 ## 📄 gw.bundle.bat.preset @[*インストールフォルダー*]\\[*presets*]
@@ -108,8 +108,6 @@
 ### オプション @[*インストールフォルダー*]\\[*install.bat*]
 #### `--i module[ module0 module1 ...moduleN]`
 　既定でインストールされるモジュールに加えてインストールするモジュールを、半角スペースで区切って任意の数だけ列挙します。列挙したモジュール名はすべてグローバルインストールされます。既定でインストールされるモジュールも含め、インストールの対象のモジュールが既にインストールされている場合、モジュールは上書きインストールされます。既定では以下のモジュールがインストールされます。
-<style>.a {background-color:red;}</style>
-<p class="a">hi</p>
 
 + [🌐 iconv-lite]
 + [🌐 webpack]
