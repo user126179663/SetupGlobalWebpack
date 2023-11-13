@@ -1,69 +1,123 @@
-﻿# 🚩 概要
-　[🌐 Webpack](https://webpack.js.org/) と、関連するモジュールをグローバルインストールして、任意のフォルダー（以下プロジェクトフォルダー）内からそれらを通じてスクリプトをバンドルする環境を整える [🌐 バッチファイル](https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%83%E3%83%81%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)集です。レガシーな環境でも動作するように [🌐 トランスパイル](https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9)した JavaScript を最**低**限の構成と設定でバンドルします。
+﻿[🌐 Webpack]: https://webpack.js.org/
+[🌐 バッチファイル]: https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%83%E3%83%81%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB
+[🌐 トランスパイル]: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9
+[🌐 Node.js]: https://nodejs.org/
+[🌐 iconv-lite]: https://www.npmjs.com/package/iconv-lite
+[🌐 webpack]: https://www.npmjs.com/package/webpack
+[🌐 webpack-cli]: https://www.npmjs.com/package/webpack-cli
+[🌐 babel-loader]: https://www.npmjs.com/package/babel-loader
+[🌐 @babel/core]: https://www.npmjs.com/package/@babel/core
+[🌐 @babel/preset-env]: https://www.npmjs.com/package/@babel/preset-env
+[🌐 core-js]: https://www.npmjs.com/package/core-js
+
+[📁 ***プロジェクトフォルダー***]: #-プロジェクトフォルダー
+[*プロジェクトフォルダー*]: #-プロジェクトフォルダー
+[📁 ***インストールフォルダー***]: #-インストールフォルダー
+[*インストールフォルダー*]: #-インストールフォルダー
+[📁 ***gw***]: #-gw
+[*gw*]: #-gw
+[📁 ***presets***]: #-presets
+[*presets*]: #-presets
+[📁 ***setup***]: #-setup
+[*setup*]: #-setup
+[📁 ***config***]: #-config
+[*config*]: #-config
+[📁 ***setting***]: #-setting
+[*setting*]: #-setting
+[📁 ***setup\****]: #-setup
+[*setup\**]: #-setup-1
+[📁 ***config***]: #-config
+[*"config.bat"*]: #-configbat
+
+[📄 ***install.bat***]: #-installbat
+[*install.bat*]: #-installbat
+[📄 ***gw.setup.bat***]: #-gwsetupbat
+[📄 ***gw.bundle.bat***]: #-gwbundlebat
+[📄 ***gw.bundle-watched.bat***]: #-gwbundle-watchedbat
+[📄 ***index.html***]: #-indexhtml
+
+[📄 ***index.html***]: #-indexhtml
+[📄 ***index.js***]: #-gwindexj
+[📄 ***webpack.config.js***]: #-webpackconfigjs
+[📄 ***config.mjs***]: #-configmjs
+[📄 ***gw.placeholder.json***]: #-gwplaceholderjson
+
+[🧩 ***langs***]: #-langs
+[🧩 *setting*]: #-setting
+
+# 🚩 概要
+　[🌐 Webpack] と、関連するモジュールをグローバルインストールして、任意のフォルダー（以下 [📁 ***プロジェクトフォルダー***]）内からそれらを通じてスクリプトをバンドルする環境を整える [🌐 バッチファイル]集です。レガシーな環境でも動作するように [🌐 トランスパイル]した JavaScript を最**低**限の構成と設定でバンドルします。
 
 # ❓ 使い方
-　インストールおよびバンドルの実行には [🌐 Node.js](https://nodejs.org/) が必要です。Node.js をインストールしていない場合は、あらかじめ[ 🌐 ダウンロード](https://nodejs.org/en/download)してインストールしてください。
-1. 任意のフォルダー内で [📄 *install.bat*](#installbat) を実行してください。実行したフォルダー（以下インストールフォルダー）のパスは、インストールフォルダーのパスとして各スクリプトや設定ファイル内で使用されるため、フォルダーを移動するなど、インストールしたフォルダーのパスに変更がある際は、変更後に改めて [📄 install.bat](#installbat) を実行し直してください。
-1. インストール後、[📄 *install.bat*](#installbat) と同じフォルダー内に生成される [📄 *gw.setup.bat*](#gwsetupbat) を、プロジェクトフォルダー内にコピーして実行してください。このフォルダーのパスはプロジェクトフォルダーのパスとして各スクリプトや設定ファイル内で使用されます。フォルダーを移動するなどプロジェクトフォルダーのパスに変更がある際は、変更後に改めて [📄 *プロジェクトフォルダー\gw.setup.bat*](#gwsetupbat-1) を実行してください。
-1. 実行後、フォルダー内に [📄 *gw.bundle.bat*](#gwbundlebat), [📄 *gw.bundle-watched.bat*](#gwbundle-watchedbat) が生成されるので、スクリプトをバンドルする際はそのいずれかを実行してください。既定の状態であれば動作確認のためのプロジェクトが同時に生成されます。バンドル後、[📄 *プロジェクトフォルダー\index.html*](#indexhtml) を開き、アラートがポップアップして `👋 Hi, world.` と表示されていればトランスパイルおよびバンドルができています。
+　インストールおよびバンドルの実行には [🌐 Node.js] が必要です。Node.js をインストールしていない場合は、あらかじめ[ 🌐 ダウンロード](https://nodejs.org/en/download)してインストールしてください。
+1. 任意のフォルダー内で [📄 ***install.bat***] を実行してください。実行したフォルダー（以下 [📁 ***インストールフォルダー***]）のパスは、インストールフォルダーのパスとして各スクリプトや設定ファイル内で使用されるため、フォルダーを移動するなど、[📁 ***インストールフォルダー***]のパスに変更がある際は、変更後に改めて [📄 ***install.bat***] を実行し直してください。
+1. インストール後、[📄 ***install.bat***] と同じフォルダー内に生成される [📄 ***gw.setup.bat***] を、[📁 ***プロジェクトフォルダー***]内にコピーして実行してください。このフォルダーのパスは [📁 ***プロジェクトフォルダー***]のパスとして各スクリプトや設定ファイル内で使用されます。フォルダーを移動するなど、[📁 ***プロジェクトフォルダー***]のパスに変更がある際は、変更後に改めて [📄 ***gw.setup.bat***]@[*プロジェクトフォルダー*]を実行してください。
+1. 実行後、フォルダー内に [📄 ***gw.bundle.bat***](#-gwbundlebat), [📄 ***gw.bundle-watched.bat***](#-gwbundle-watchedbat) が生成されるので、スクリプトをバンドルする際はそのいずれかを実行してください。既定の状態であれば動作確認のためのプロジェクトが同時に生成されます。バンドル後、[📄 ***index.html***]@[*プロジェクトフォルダー*]を開き、アラートがポップアップして `👋 Hi, world.` と表示されていればトランスパイルおよびバンドルができています。
 
 ## 🧯 アンインストール
 　このバッチファイルからシステムファイルへの書き込みは行なわないためアンインストールは不要ですが、このバッチファイルからインストールしたモジュールや、生成したファイルを削除したい場合は以下の手順に従ってください。
-1. 既定でグローバルインストールされるモジュールをアンインストールしたい場合は、[📄 *インストールフォルダー\install.bat*](#installbat) を実行後、コンソール画面で[*インストールオプション  `--u`*](#--u) を入力してください。
+1. 既定でグローバルインストールされるモジュールをアンインストールしたい場合は、[📄 ***install.bat***]@[*インストールフォルダー*] を実行後、コンソール画面で[*インストールオプション  `--u`*](#--u) を入力してください。
 2. インストールフォルダーや、生成したプロジェクトフォルダー内のファイルなどは任意で削除してください。
 
 # 🗂️ ファイル構成
 
 ## 📁 インストールフォルダー
-### 📁 presets
-　[📄 *プロジェクトフォルダー\gw.setup.bat*](#gwsetupbat-1) 実行後に生成されるファイルの元になるファイルが入ったフォルダーです。
 
-#### 📄 presets\gw.bundle.bat.preset
-　[📄 *プロジェクトフォルダー\gw.bundle.bat*](#gwbundlebat) の元になるファイルです。
+## 📁 presets @[*インストールフォルダー*]
+　[📄 ***gw.setup.bat***]@[*プロジェクトフォルダー*]実行後に生成されるファイルの元になるファイルが入ったフォルダーです。
 
-#### 📄 presets\gw.bundle-watched.bat.preset
-　[📄 *プロジェクトフォルダー\gw.bundle-watched.bat*](#gwbundle-watchedbat) の元になるファイルです。
+## 📄 gw.bundle.bat.preset @[*インストールフォルダー*]\\[*presets*]
+　[📄 ***gw.bundle.bat***]@[*プロジェクトフォルダー*]の元になるファイルです。
 
-#### 📄 presets\index.html.template
-　[📄 *プロジェクトフォルダー\index.html*](#indexhtml) の元になるファイルです。
+## 📄 gw.bundle-watched.bat.preset @[*インストールフォルダー*]\\[*presets*]
+　[📄 ***gw.bundle-watched.bat***]@[*プロジェクトフォルダー*]の元になるファイルです。
 
-#### 📄 presets\index.js.preset
-　[📄 *プロジェクトフォルダー\gw\index.js*](#gwindexjs) の元になるファイルです。
+## 📄 index.html.template @[*インストールフォルダー*]\\[*presets*]
+　[📄 ***index.html***]@[*プロジェクトフォルダー*]の元になるファイルです。
 
-#### 📄 presets\webpack.config.js.preset
-　[📄 *プロジェクトフォルダー\webpack.config.js*](#webpackconfigjs) の元になるファイルです。
+## 📄 index.js.preset @[*インストールフォルダー*]\\[*presets*]
+　[📄 ***index.js***]@[*プロジェクトフォルダー*]\\[*gw*] の元になるファイルです。
 
-### 📁 setup
+## 📄 webpack.config.js.preset @[*インストールフォルダー*]\\[*presets*]
+　[📄 ***webpack.config.js***]@[*プロジェクトフォルダー*] の元になるファイルです。
+
+## 📁 setup @[*インストールフォルダー*]
 　バンドル環境を構築するためのファイルが入ったフォルダーです。
 
-#### 📁 setup\config
-　[📄 *setup\config.bat*](#-setupconfigbat) で使うファイルが入ったフォルダーです。
+## 📁 config @[*インストールフォルダー*]\\[*setup*]
+　[📄 ***config.bat***](#-configbat)@[*インストールフォルダー*]\\[*setup*] で使うファイルが入ったフォルダーです。
 
-#### 📄 setup\config\langs
-　[📄 *setup\config\config.mjs*](#setupconfigconfigmjs) で表示するメッセージを言語別に [🌐 JSON](https://ja.wikipedia.org/wiki/JavaScript_Object_Notation) で記述したファイルです。現状は `ja-JP.json` しか存在しませんが、任意で追加することができます。追加した言語を表示する場合は、任意の [📄 *gw.placeholder.json*](#-gwplaceholderjson) 内のプロパティ [🧩 *setting.setup["config.bat"].langs*](#settingsetupconfigbatlangs) の値に、その言語名を追加してください。
+## 📁 langs @[*インストールフォルダー*]\\[*config*]\\[*setup*]
+　[📄 ***config.mjs***](#-configmjs)@[*インストールフォルダー*]\\[*setup*]\\[*config*] で表示するメッセージを言語別に [🌐 JSON](https://ja.wikipedia.org/wiki/JavaScript_Object_Notation) で記述したファイルが入ったフォルダーです。現状は 📄 ja-JP.json しか存在しませんが、任意で追加することができます。追加した言語を表示する場合は、任意の [📄 ***gw.placeholder.json***] 内のプロパティ [🧩 ***langs***]@[*setting*].[*setup\**][[*"config.bat"*]] の値に、その言語名を追加してください。
 
-#### 📄 setup\config\cascade.mjs
-　[📄 *setup\config\config.mjs*](#setupconfigconfigmjs) で使うスクリプトです。
+[📄 ***cascade.mjs***]: #-cascade
+[📄 ***config.mjs***]: #-configmjs
+[📄 ***config.bat***]: #-configbat
+## 📄 cascade.mjs @[*インストールフォルダー*]\\[*config*]\\[*setup*]
+　[📄 ***config.mjs***]@[*インストールフォルダー*]\\[*config*]\\[*setup*] で使うスクリプトです。
 
-#### 📄 setup\config\config.mjs
-　[📄 *setup\config.bat*](#-setupconfigbat) の本体です。バンドル環境を構築するためのファイルを生成します。
+## 📄 config.mjs @[*インストールフォルダー*]\\[*config*]\\[*setup*]
+　[📄 ***config.bat***]@[*インストールフォルダー*]\\[*config*]\\[*setup*] の実際の処理を担う JavaScript です。バンドル環境を構築するためのファイルを生成します。
 
-#### 📄 setup\config.bat
+## 📄 config.bat @[*インストールフォルダー*]\\[*config*]\\[*setup*]
 　バンドル環境を構築するファイルを生成します。
 
-### 📄 install.bat
+## 📄 install.bat @[*インストールフォルダー*]
 　実行するとインストールを行ないます。以下のインストールオプションを実行後にコンソールから入力するか、起動オプションとして指定することができます。
 
+### オプション @[*インストールフォルダー*]\\[*install.bat*]
 #### `--i module[ module0 module1 ...moduleN]`
 　既定でインストールされるモジュールに加えてインストールするモジュールを、半角スペースで区切って任意の数だけ列挙します。列挙したモジュール名はすべてグローバルインストールされます。既定でインストールされるモジュールも含め、インストールの対象のモジュールが既にインストールされている場合、モジュールは上書きインストールされます。既定では以下のモジュールがインストールされます。
+<style>.a {background-color:red;}</style>
+<p class="a">hi</p>
 
-+ [🌐 iconv-lite](https://www.npmjs.com/package/iconv-lite)
-+ [🌐 webpack](https://www.npmjs.com/package/webpack)
-+ [🌐 webpack-cli](https://www.npmjs.com/package/webpack-cli)
-+ [🌐 babel-loader](https://www.npmjs.com/package/babel-loader)
-+ [🌐 @babel/core](https://www.npmjs.com/package/@babel/core)
-+ [🌐 @babel/preset-env](https://www.npmjs.com/package/@babel/preset-env)
-+ [🌐 core-js](https://www.npmjs.com/package/core-js)
++ [🌐 iconv-lite]
++ [🌐 webpack]
++ [🌐 webpack-cli]
++ [🌐 babel-loader]
++ [🌐 @babel/core]
++ [🌐 @babel/preset-env]
++ [🌐 core-js]
 
 #### `--x[ modulemodule0 module1 ...moduleN]`
 　`--x` に続いて列挙した、半角スペースで区切られた任意の数のモジュールのいずれかが、インストールされるモジュール内に含まれる場合、そのモジュールのインストールをスキップします。モジュール名を指定せずに入力すると、既定でインストールされるモジュールのインストールをすべてスキップします。これは `--x webpack webpack-cli babel-loader @babel/core @babel/preset-env core-js` と同等です。
@@ -116,7 +170,7 @@ global['gw.placeholder.json'].c;   // 4
 // あくまで例示で、こうしたオブジェクトが実際にどこかに作られるわけではありません。
 ```
 
-　このファイルに記述された JSON の値は、[📄 *プロジェクトフォルダー\gw.setup.bat*](#gwsetupbat-1) によって生成されるファイル内に記されたプレースホルダーを通じて参照し、またそれ自身を置換することができます。プレースホルダーは `<` で始まり、次に `[` と `]` の中に、参照する 📄 *gw.placeholder.json* 内のプロパティ名を記し、最後に `>` で閉じます。参照したいプロパティがネストしている場合、プロパティ名を記す部分を連ねて書きます。各記号間の空白やタブ、改行は許容されます。
+　このファイルに記述された JSON の値は、[📄 *プロジェクトフォルダー\gw.setup.bat*](#-gwbundlebat) によって生成されるファイル内に記されたプレースホルダーを通じて参照し、またそれ自身を置換することができます。プレースホルダーは `<` で始まり、次に `[` と `]` の中に、参照する 📄 *gw.placeholder.json* 内のプロパティ名を記し、最後に `>` で閉じます。参照したいプロパティがネストしている場合、プロパティ名を記す部分を連ねて書きます。各記号間の空白やタブ、改行は許容されます。
 
 ```js
 // gw.placeholder.json
@@ -211,7 +265,7 @@ global['gw.placeholder.json'].c;   // 4
 　バンドルするファイルを入れるフォルダーです。既定では、このフォルダー内にある [📄 *gw\index.js*](#gwindexjs) から読み込まれる一連のファイルを、プロジェクトフォルダー直下に `gw.js` としてバンドルします。
 
 #### 📄 gw\index.js
-　バンドル元となる JavaScript です。[JSON](https://ja.wikipedia.org/wiki/JavaScript_Object_Notation) [📄 *gw.placeholder.json*](#gwplaceholderjson) の設定に基づいてサンプルコードが挿入されます。既定では、[📄 *プロジェクトフォルダー\gw.bundle.bat*](#gwbundlebat), [📄 *プロジェクトフォルダー\gw.bundle-watched.bat*](#gwbundle-watchedbat) の実行時にこのファイルが読み込まれます。
+　バンドル元となる JavaScript です。[JSON](https://ja.wikipedia.org/wiki/JavaScript_Object_Notation) [📄 *gw.placeholder.json*](#gwplaceholderjson) の設定に基づいてサンプルコードが挿入されます。既定では、[📄 *プロジェクトフォルダー\gw.bundle.bat*](#-gwbundlebat), [📄 *プロジェクトフォルダー\gw.bundle-watched.bat*](#gwbundle-watchedbat) の実行時にこのファイルが読み込まれます。
 
 ### 📄 gw.bundle.bat
 　バンドルを実行する[バッチファイル](https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%83%E3%83%81%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)です。既定では、プロジェクトフォルダー直下に `gw.js` を生成します。
@@ -226,7 +280,7 @@ global['gw.placeholder.json'].c;   // 4
 　[`インストールフォルダー\gw.setup.bat`]() からプロジェクトフォルダー内に任意でコピーされた[バッチファイル](https://ja.wikipedia.org/wiki/%E3%83%90%E3%83%83%E3%83%81%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)で、プロジェクトフォルダー内にバンドル環境を構築します。
 
 ### 📄 index.html
-　プロジェクトの HTML です。既定では、[📄 *gw.bundle.bat*](#gwbundlebat), [📄 *gw.bundle-watched.bat*](#gwbundle-watchedbat) を通じて生成された、プロジェクトフォルダー直下の `gw.js` を読み込みます。
+　プロジェクトの HTML です。既定では、[📄 *gw.bundle.bat*](#-gwbundlebat), [📄 *gw.bundle-watched.bat*](#gwbundle-watchedbat) を通じて生成された、プロジェクトフォルダー直下の `gw.js` を読み込みます。
 
 　HTML 内の一部の要素の属性や内容は、[JSON](https://ja.wikipedia.org/wiki/JavaScript_Object_Notation) [📄 *gw.placeholder.json*](#gwplaceholderjson) 内の [Object](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object) [📄 *placeholder["index.html"]*](#placeholderindexhtml) が持つプロパティやその値を変じて任意のものに変更することができます。
 
@@ -235,4 +289,4 @@ global['gw.placeholder.json'].c;   // 4
 
 
 # 既知の不具合
-+ ドライブ直下で `gw.setup.bat` を実行後、生成された [📄 *gw.bundle.bat*](#gwbundlebat), [📄 *gw.bundle-watched.bat*](#gwbundle-watchedbat) を実行すると Webpack の実行に失敗する。
++ ドライブ直下で `gw.setup.bat` を実行後、生成された [📄 *gw.bundle.bat*](#-gwbundlebat), [📄 *gw.bundle-watched.bat*](#gwbundle-watchedbat) を実行すると Webpack の実行に失敗する。
